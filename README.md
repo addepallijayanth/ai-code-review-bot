@@ -174,7 +174,3 @@ runs the unit tests and the integration tests. `WebhookFlowIT` drives the whole 
 - **Triage fails open:** if the triage call fails, every file gets a deep review; cost goes up, coverage does not go down.
 - **The review never blocks merges:** it is posted as `COMMENT`, never `REQUEST_CHANGES` or `APPROVE`.
 - **Suggestion acceptance** (`finding.accepted`) is detected when a later commit contains the suggested code, which makes it a real-world quality signal on the dashboard.
-
-
-
-Testing the review bot
