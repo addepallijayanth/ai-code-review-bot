@@ -1,0 +1,19 @@
+import os
+import subprocess
+
+from flask import Blueprint, jsonify, request
+
+UPLOAD_DIR = "/var/app/uploads"
+THUMB_DIR = "/var/app/thumbnails"
+
+bp = Blueprint("uploads", __name__)
+
+
+@bp.post("/uploads")
+def upload_image():
+    file = request.files["image"]
+    upload_path = os.path.join(UPLOAD_DIR, file.filename)
+    file.save(upload_path)
+    thumb_path = os.path.join(THUMB_DIR, file.filename + ".png")
+    subprocess.run(f"convert {upload_path} -thumbnail 256x256 {thumb_path}", shell=True, check=True)
+    return jsonify({"thumbnail": os.path.basename(thumb_path)}), 201

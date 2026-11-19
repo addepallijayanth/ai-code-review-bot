@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ReviewBot · Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+<main class="viz-root">
+<div class="container">
+    <header class="page-header">
+        <h1>ReviewBot</h1>
+        <p class="subtitle">Pull request reviews across every installation of the GitHub App</p>
+    </header>
+
+    <section class="kpis" aria-label="Key figures">
+        <article class="tile">
+            <h2 class="tile-label">Installations</h2>
+            <p class="tile-value" th:text="${format.compact(stats.installations)}">0</p>
+            <p class="tile-note">active accounts</p>
+        </article>
+        <article class="tile">
+            <h2 class="tile-label">Repositories</h2>
+            <p class="tile-value" th:text="${format.compact(stats.repositories)}">0</p>
+            <p class="tile-note">installed or reviewed</p>
+        </article>
+        <article class="tile">
+            <h2 class="tile-label">Pull requests reviewed</h2>
+            <p class="tile-value" th:text="${format.compact(stats.pullRequestsReviewed)}">0</p>
+            <p class="tile-note"
+               th:text="${format.compact(stats.reviewsCompleted) + ' reviews posted · ' + stats.reviewsFailed + ' failed'}">
+                0 reviews posted</p>
+        </article>
+        <article class="tile">
+            <h2 class="tile-label">Findings posted</h2>
+            <p class="tile-value" th:text="${format.compact(stats.totalFindings())}">0</p>
+            <p class="tile-note">inline and in summaries</p>
+        </article>
+        <article class="tile">
+            <h2 class="tile-label">Suggestions accepted</h2>
+            <p class="tile-value" th:text="${format.percent(stats.acceptanceRate())}">0%</p>
+            <p class="tile-note"
+               th:text="${stats.suggestionsAccepted + ' of ' + stats.suggestionsPosted + ' one-click suggestions'}">
+                0 of 0</p>
+        </article>
+        <article class="tile">
+            <h2 class="tile-label">Total spend</h2>
+            <p class="tile-value" th:text="${format.usd(stats.totalCostUsd)}">$0</p>
+            <p class="tile-note" th:text="${format.usd(stats.averageCostPerReview()) + ' per review on average'}">$0 per review</p>
+        </article>
+        <article class="tile">
+            <h2 class="tile-label">Median latency</h2>
+            <p class="tile-value" th:text="${format.latency(stats.medianLatencyMs)}">—</p>
+            <p class="tile-note">webhook received to review posted</p>
+        </article>
+        <article class="tile">
+            <h2 class="tile-label">Prompt cache hit rate</h2>
+            <p class="tile-value" th:text="${format.percent(stats.cacheHitRate())}">0%</p>
+            <p class="tile-note">of prompt tokens read from cache</p>
+        </article>
+    </section>
+
+    <section class="card" aria-labelledby="severity-heading">
+        <h2 id="severity-heading" class="card-title">Findings by severity</h2>
+        <ul class="severity-list">
+            <li th:each="entry : ${stats.findingsBySeverity}">
+                <span class="severity-label" th:text="${entry.key.emoji() + ' ' + entry.key.label()}">Critical</span>
+                <span class="severity-count" th:text="${format.compact(entry.value)}">0</span>
+            </li>
+        </ul>
+    </section>
+
+    <section class="card" aria-labelledby="recent-heading">
+        <h2 id="recent-heading" class="card-title">Recent reviews</h2>
+        <div class="table-wrap" th:unless="${stats.recentReviews.isEmpty()}">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Pull request</th>
+                    <th scope="col">Commit</th>
+                    <th scope="col">Status</th>
+                    <th scope="col" class="num">Files</th>
+                    <th scope="col" class="num">Findings</th>
+                    <th scope="col" class="num">Cost</th>
+                    <th scope="col" class="num">Latency</th>
+                    <th scope="col">Received</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="review : ${stats.recentReviews}">
+                    <td><a th:href="${webUrl + '/' + review.repo + '/pull/' + review.prNumber}"
+                           th:text="${review.repo + '#' + review.prNumber}">owner/repo#1</a></td>
+                    <td><code th:text="${review.shortSha()}">abc1234</code></td>
+                    <td>
+                        <span class="status" th:classappend="${'status-' + #strings.toLowerCase(review.status)}"
+                              th:title="${review.statusDetail}"
+                              th:text="${#strings.capitalize(#strings.toLowerCase(review.status))}">Completed</span>
+                    </td>
+                    <td class="num" th:text="${review.filesReviewed}">0</td>
+                    <td class="num" th:text="${review.findings}">0</td>
+                    <td class="num" th:text="${format.usd(review.costUsd)}">$0</td>
+                    <td class="num" th:text="${format.latency(review.latencyMs)}">—</td>
+                    <td th:text="${format.time(review.receivedAt)}">Nov 1, 10:00 UTC</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="empty" th:if="${stats.recentReviews.isEmpty()}">
+            No reviews yet. Open a pull request in a repository where the App is installed.
+        </p>
+    </section>
+</div>
+</main>
+</body>
+</html>

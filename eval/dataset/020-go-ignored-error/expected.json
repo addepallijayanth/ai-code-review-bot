@@ -1,0 +1,13 @@
+{
+  "title": "Load service configuration from a JSON file",
+  "description": "Adds config.Load(path) for the new CLI.",
+  "expected": [
+    {
+      "file": "internal/config/load.go",
+      "line": 19,
+      "tolerance": 3,
+      "category": "error-handling",
+      "note": "The open error is discarded; a missing file surfaces as a confusing decode error on a nil *os.File"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+diff --git a/src/main/java/com/acme/users/UserDao.java b/src/main/java/com/acme/users/UserDao.java
+index 896118d..7aef3e5 100644
+--- a/src/main/java/com/acme/users/UserDao.java
++++ b/src/main/java/com/acme/users/UserDao.java
+@@ -4,6 +4,9 @@ import java.sql.Connection;
+ import java.sql.PreparedStatement;
+ import java.sql.ResultSet;
+ import java.sql.SQLException;
++import java.sql.Statement;
++import java.util.ArrayList;
++import java.util.List;
+ import java.util.Optional;
+ import javax.sql.DataSource;
+ 
+@@ -25,6 +28,19 @@ public class UserDao {
+         }
+     }
+ 
++    public List<User> searchByName(String name) throws SQLException {
++        String sql = "SELECT id, name, email FROM users WHERE name LIKE '%" + name + "%' ORDER BY name";
++        try (Connection connection = dataSource.getConnection();
++             Statement statement = connection.createStatement();
++             ResultSet rows = statement.executeQuery(sql)) {
++            List<User> users = new ArrayList<>();
++            while (rows.next()) {
++                users.add(map(rows));
++            }
++            return users;
++        }
++    }
++
+     private static User map(ResultSet rows) throws SQLException {
+         return new User(rows.getLong("id"), rows.getString("name"), rows.getString("email"));
+     }

@@ -1,0 +1,14 @@
+{
+  "title": "Add shipping labels for orders",
+  "description": "Adds LabelService.label(orderId) so the warehouse app can print a shipping label for an order.",
+  "expected": [
+    {
+      "file": "src/main/java/com/acme/shipping/LabelService.java",
+      "line": 28,
+      "alsoLines": [27],
+      "tolerance": 3,
+      "category": "null-safety",
+      "note": "Customer may be missing (guest checkout or deleted account) and is dereferenced without a check"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+diff --git a/src/main/java/com/acme/projects/ProjectController.java b/src/main/java/com/acme/projects/ProjectController.java
+index 7abded5..1b69e13 100644
+--- a/src/main/java/com/acme/projects/ProjectController.java
++++ b/src/main/java/com/acme/projects/ProjectController.java
+@@ -1,7 +1,9 @@
+ package com.acme.projects;
+ 
+ import org.springframework.http.HttpStatus;
++import org.springframework.http.ResponseEntity;
+ import org.springframework.security.core.annotation.AuthenticationPrincipal;
++import org.springframework.web.bind.annotation.DeleteMapping;
+ import org.springframework.web.bind.annotation.GetMapping;
+ import org.springframework.web.bind.annotation.PathVariable;
+ import org.springframework.web.bind.annotation.PutMapping;
+@@ -32,6 +34,12 @@ public class ProjectController {
+         return projects.save(project);
+     }
+ 
++    @DeleteMapping("/{id}")
++    public ResponseEntity<Void> delete(@PathVariable long id, @AuthenticationPrincipal AppUser user) {
++        projects.deleteById(id);
++        return ResponseEntity.noContent().build();
++    }
++
+     private Project requireOwned(long id, AppUser user) {
+         Project project = projects.findById(id)
+                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

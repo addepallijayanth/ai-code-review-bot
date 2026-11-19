@@ -1,0 +1,63 @@
+diff --git a/web/src/lib/formatPrice.test.ts b/web/src/lib/formatPrice.test.ts
+new file mode 100644
+index 0000000..22f0f40
+--- /dev/null
++++ b/web/src/lib/formatPrice.test.ts
+@@ -0,0 +1,17 @@
++import { describe, expect, it } from "vitest";
++import { formatPrice } from "./formatPrice";
++
++describe("formatPrice", () => {
++  it("formats cents as dollars", () => {
++    expect(formatPrice(1999, "USD", "en-US")).toBe("$19.99");
++  });
++
++  it("respects currencies without minor units", () => {
++    expect(formatPrice(500, "JPY", "ja-JP")).toBe("￥500");
++  });
++
++  it("uses the locale's separators", () => {
++    // de-DE puts a no-break space before the currency sign
++    expect(formatPrice(123456, "EUR", "de-DE")).toMatch(/^1\.234,56\s€$/);
++  });
++});
+diff --git a/web/src/lib/formatPrice.ts b/web/src/lib/formatPrice.ts
+new file mode 100644
+index 0000000..a89e95c
+--- /dev/null
++++ b/web/src/lib/formatPrice.ts
+@@ -0,0 +1,15 @@
++const formatters = new Map<string, Intl.NumberFormat>();
++
++/**
++ * Formats an amount in minor units (cents) for display, e.g. formatPrice(1999, "USD", "en-US") -> "$19.99".
++ */
++export function formatPrice(amountMinor: number, currency: string, locale: string): string {
++  const key = `${locale}|${currency}`;
++  let formatter = formatters.get(key);
++  if (!formatter) {
++    formatter = new Intl.NumberFormat(locale, { style: "currency", currency });
++    formatters.set(key, formatter);
++  }
++  const digits = formatter.resolvedOptions().maximumFractionDigits ?? 2;
++  return formatter.format(amountMinor / 10 ** digits);
++}
+diff --git a/web/src/pages/CartPage.tsx b/web/src/pages/CartPage.tsx
+index f520f5e..2727be4 100644
+--- a/web/src/pages/CartPage.tsx
++++ b/web/src/pages/CartPage.tsx
+@@ -1,12 +1,13 @@
+ import React from "react";
+ import { useCart } from "../hooks/useCart";
++import { formatPrice } from "../lib/formatPrice";
+ 
+ export function CartPage() {
+   const cart = useCart();
+   return (
+     <section>
+       <h1>Your cart</h1>
+-      <p className="total">Total: {(cart.totalCents / 100).toFixed(2)} {cart.currency}</p>
++      <p className="total">Total: {formatPrice(cart.totalCents, cart.currency, navigator.language)}</p>
+     </section>
+   );
+ }

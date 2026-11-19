@@ -1,0 +1,13 @@
+{
+  "title": "Bulk import contacts from CSV",
+  "description": "Adds importContacts() used by the CSV upload endpoint; returns how many contacts were imported.",
+  "expected": [
+    {
+      "file": "server/src/services/importService.ts",
+      "line": 9,
+      "tolerance": 3,
+      "category": "bug",
+      "note": "async callback in forEach is not awaited: the function returns 0 before any save finishes and save errors are unhandled"
+    }
+  ]
+}

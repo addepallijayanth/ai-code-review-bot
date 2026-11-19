@@ -1,0 +1,115 @@
+spring:
+  application:
+    name: ai-code-review-bot
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/reviewbot
+    username: reviewbot
+    password: reviewbot
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      lettuce:
+        pool:
+          enabled: true
+          max-active: 16
+  security:
+    user:
+      name: ${DASHBOARD_USERNAME:admin}
+      # Leave empty in development to get a generated password in the log.
+      password: ${DASHBOARD_PASSWORD:}
+  lifecycle:
+    timeout-per-shutdown-phase: 45s
+
+server:
+  shutdown: graceful
+  forward-headers-strategy: framework
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+logging:
+  pattern:
+    level: "%5p [%X{repo:-}%X{pr:-}]"
+
+reviewbot:
+  github:
+    app-id: ${GITHUB_APP_ID:}
+    app-slug: ${GITHUB_APP_SLUG:reviewbot}
+    private-key: ${GITHUB_PRIVATE_KEY:}
+    private-key-path: ${GITHUB_PRIVATE_KEY_PATH:}
+    webhook-secret: ${WEBHOOK_SECRET:}
+    api-url: ${GITHUB_API_URL:https://api.github.com}
+    web-url: ${GITHUB_WEB_URL:https://github.com}
+    mention: "@reviewbot"
+
+  ai:
+    api-key: ${ANTHROPIC_API_KEY:}
+    base-url: ${ANTHROPIC_BASE_URL:https://api.anthropic.com}
+    request-timeout: 5m
+    max-retries: 3
+    # Retry a policy refusal on a fallback model (server-side, beta). Not available for Haiku.
+    refusal-fallback: true
+    models:
+      triage: claude-haiku-5-5
+      review: claude-sonnet-5-5
+      chat: claude-sonnet-5-5
+    agent:
+      max-steps: 8
+      max-tokens-per-turn: 16000
+      review-effort: medium
+      triage-effort: low
+      explain-effort: low
+      fix-effort: medium
+      read-file-max-lines: 400
+      max-searches-per-review: 6
+      triage-batch-size: 12
+      triage-max-lines-per-file: 150
+      warmup-wait: 90s
+    # USD per million tokens, Claude API list prices. cache-write is the 5-minute TTL rate.
+    # claude-sonnet-5 is the server-side fallback model for Sonnet 5.5 refusals.
+    pricing:
+      claude-sonnet-5-5: { input: 2.00, output: 10.00, cache-write: 2.50, cache-read: 0.10 }
+      claude-sonnet-5: { input: 2.00, output: 10.00, cache-write: 2.50, cache-read: 0.20 }
+      claude-haiku-5-5: { input: 0.10, output: 0.50, cache-write: 0.125, cache-read: 0.01, long-context-threshold: 100000, long-context-multiplier: 5 }
+
+  review:
+    max-files: 50
+    max-changed-lines-per-file: 1500
+    max-chunk-chars: 24000
+    max-concurrent-files: 4
+    skip-drafts: true
+    budget:
+      max-tokens-per-pr: 600000
+      max-cost-per-pr-usd: 0.60
+      max-cost-per-installation-per-day-usd: 5.00
+      max-tokens-per-command: 60000
+      max-cost-per-command-usd: 0.10
+    defaults:
+      min-severity: minor
+      max-comments: 15
+
+  queue:
+    concurrency: 4
+    max-attempts: 3
+    retry-backoff: 30s
+    visibility-timeout: 15m
+    poll-timeout: 2s

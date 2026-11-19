@@ -1,0 +1,13 @@
+{
+  "title": "Show formatted comments",
+  "description": "Comments may contain line breaks and links, so the list now renders the comment HTML.",
+  "expected": [
+    {
+      "file": "web/src/components/CommentList.tsx",
+      "line": 17,
+      "tolerance": 3,
+      "category": "security",
+      "note": "User-written comment body rendered as raw HTML (stored XSS)"
+    }
+  ]
+}

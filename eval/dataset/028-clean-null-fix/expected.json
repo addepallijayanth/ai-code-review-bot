@@ -1,0 +1,5 @@
+{
+  "title": "Handle deleted customers on the order page",
+  "description": "Orders of deleted customers crashed the order page; they now show \"Deleted customer\". Adds tests.",
+  "expected": []
+}

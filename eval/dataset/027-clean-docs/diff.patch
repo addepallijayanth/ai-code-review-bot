@@ -1,0 +1,52 @@
+diff --git a/README.md b/README.md
+index f45c699..8819730 100644
+--- a/README.md
++++ b/README.md
+@@ -1,7 +1,16 @@
+ # Inventory Service
+ 
+-Keeps stock levels for the warehouse.
++Keeps stock levels for the warehouse and publishes a `stock-changed` event whenever a level changes.
+ 
+-## Running
++## Running locally
+ 
+-    ./gradlew bootRun
++1. Start PostgreSQL and Kafka: `docker compose up -d`
++2. Run the service: `./gradlew bootRun`
++3. Open http://localhost:8080/actuator/health to check it is up.
++
++## Configuration
++
++| Variable | Default | Purpose |
++|---|---|---|
++| `DB_URL` | `jdbc:postgresql://localhost:5432/inventory` | Database connection |
++| `KAFKA_BOOTSTRAP` | `localhost:9092` | Event broker |
+diff --git a/src/main/java/com/acme/inventory/RetryPolicy.java b/src/main/java/com/acme/inventory/RetryPolicy.java
+index bbb3ece..d465a40 100644
+--- a/src/main/java/com/acme/inventory/RetryPolicy.java
++++ b/src/main/java/com/acme/inventory/RetryPolicy.java
+@@ -2,6 +2,10 @@ package com.acme.inventory;
+ 
+ import java.time.Duration;
+ 
++/**
++ * Exponential backoff for publishing stock events: the delay doubles after every failed attempt,
++ * starting at {@code initialDelay}, and the event is given up after {@code maxAttempts}.
++ */
+ public final class RetryPolicy {
+ 
+     private final int maxAttempts;
+@@ -12,10 +16,12 @@ public final class RetryPolicy {
+         this.initialDelay = initialDelay;
+     }
+ 
++    /** Delay before the given attempt (1-based): initialDelay, 2x, 4x, ... */
+     public Duration delayBefore(int attempt) {
+         return initialDelay.multipliedBy(1L << (attempt - 1));
+     }
+ 
++    /** Whether another attempt is allowed after {@code attempt} attempts have failed. */
+     public boolean shouldRetry(int attempt) {
+         return attempt < maxAttempts;
+     }

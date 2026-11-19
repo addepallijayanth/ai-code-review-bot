@@ -1,0 +1,67 @@
+diff --git a/src/main/java/com/acme/orders/OrderPageService.java b/src/main/java/com/acme/orders/OrderPageService.java
+index 8eb5a99..5d0b088 100644
+--- a/src/main/java/com/acme/orders/OrderPageService.java
++++ b/src/main/java/com/acme/orders/OrderPageService.java
+@@ -1,9 +1,12 @@
+ package com.acme.orders;
+ 
++import com.acme.customers.Customer;
+ import com.acme.customers.CustomerRepository;
+ 
+ public class OrderPageService {
+ 
++    static final String DELETED_CUSTOMER = "Deleted customer";
++
+     private final OrderRepository orders;
+     private final CustomerRepository customers;
+ 
+@@ -14,7 +17,9 @@ public class OrderPageService {
+ 
+     public OrderPage page(long orderId) {
+         Order order = orders.require(orderId);
+-        String customerName = customers.findById(order.getCustomerId()).orElse(null).getFullName();
++        String customerName = customers.findById(order.getCustomerId())
++                .map(Customer::getFullName)
++                .orElse(DELETED_CUSTOMER);
+         return new OrderPage(order.getNumber(), customerName, order.getTotalCents());
+     }
+ }
+diff --git a/src/test/java/com/acme/orders/OrderPageServiceTest.java b/src/test/java/com/acme/orders/OrderPageServiceTest.java
+new file mode 100644
+index 0000000..2ea46d3
+--- /dev/null
++++ b/src/test/java/com/acme/orders/OrderPageServiceTest.java
+@@ -0,0 +1,33 @@
++package com.acme.orders;
++
++import static org.assertj.core.api.Assertions.assertThat;
++import static org.mockito.Mockito.mock;
++import static org.mockito.Mockito.when;
++
++import com.acme.customers.Customer;
++import com.acme.customers.CustomerRepository;
++import java.util.Optional;
++import org.junit.jupiter.api.Test;
++
++class OrderPageServiceTest {
++
++    private final OrderRepository orders = mock(OrderRepository.class);
++    private final CustomerRepository customers = mock(CustomerRepository.class);
++    private final OrderPageService service = new OrderPageService(orders, customers);
++
++    @Test
++    void showsTheCustomerName() {
++        when(orders.require(1L)).thenReturn(new Order(1L, "A-1", 7L, 1999));
++        when(customers.findById(7L)).thenReturn(Optional.of(new Customer(7L, "Ada Lovelace")));
++
++        assertThat(service.page(1L).customerName()).isEqualTo("Ada Lovelace");
++    }
++
++    @Test
++    void showsDeletedCustomersInsteadOfFailing() {
++        when(orders.require(2L)).thenReturn(new Order(2L, "A-2", 8L, 500));
++        when(customers.findById(8L)).thenReturn(Optional.empty());
++
++        assertThat(service.page(2L).customerName()).isEqualTo(OrderPageService.DELETED_CUSTOMER);
++    }
++}

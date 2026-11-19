@@ -1,0 +1,13 @@
+{
+  "title": "Volume discounts",
+  "description": "Orders of 10+ units get 5% off, 50+ units 10% off, capped at 200.00 per order.",
+  "expected": [
+    {
+      "file": "src/main/java/com/acme/pricing/PriceCalculator.java",
+      "line": 13,
+      "tolerance": 8,
+      "category": "tests",
+      "note": "New discount tiers and the cap have no tests; the existing test class only covers subtotal()"
+    }
+  ]
+}

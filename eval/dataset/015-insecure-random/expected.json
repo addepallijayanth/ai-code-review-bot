@@ -1,0 +1,13 @@
+{
+  "title": "Password reset emails",
+  "description": "Generates a reset token, stores it for an hour and emails a reset link.",
+  "expected": [
+    {
+      "file": "src/main/java/com/acme/auth/PasswordResetService.java",
+      "line": 22,
+      "tolerance": 3,
+      "category": "security",
+      "note": "Reset token from java.util.Random is predictable; use SecureRandom with enough entropy"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "title": "Format prices with the user's locale",
+  "description": "Adds formatPrice() and uses it on the cart page; includes tests.",
+  "expected": []
+}

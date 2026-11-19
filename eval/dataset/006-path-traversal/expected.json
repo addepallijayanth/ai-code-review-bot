@@ -1,0 +1,13 @@
+{
+  "title": "Let users download generated reports",
+  "description": "Adds GET /api/reports/download?file=<name> that serves files from the reports directory.",
+  "expected": [
+    {
+      "file": "src/main/java/com/acme/reports/ReportDownloadController.java",
+      "line": 27,
+      "tolerance": 3,
+      "category": "security",
+      "note": "User-controlled file name resolved without normalisation allows ../ path traversal"
+    }
+  ]
+}

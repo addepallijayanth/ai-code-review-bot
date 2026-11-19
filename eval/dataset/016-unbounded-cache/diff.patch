@@ -1,0 +1,24 @@
+diff --git a/src/main/java/com/acme/media/ThumbnailService.java b/src/main/java/com/acme/media/ThumbnailService.java
+index 5833b67..8013ac2 100644
+--- a/src/main/java/com/acme/media/ThumbnailService.java
++++ b/src/main/java/com/acme/media/ThumbnailService.java
+@@ -1,7 +1,11 @@
+ package com.acme.media;
+ 
++import java.util.Map;
++import java.util.concurrent.ConcurrentHashMap;
++
+ public class ThumbnailService {
+ 
++    private final Map<String, byte[]> cache = new ConcurrentHashMap<>();
+     private final ImageStorage storage;
+     private final ImageResizer resizer;
+ 
+@@ -11,6 +15,6 @@ public class ThumbnailService {
+     }
+ 
+     public byte[] thumbnail(String imageId, int width) {
+-        return resizer.resize(storage.load(imageId), width);
++        return cache.computeIfAbsent(imageId + ":" + width, key -> resizer.resize(storage.load(imageId), width));
+     }
+ }

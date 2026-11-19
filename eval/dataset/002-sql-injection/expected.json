@@ -1,0 +1,14 @@
+{
+  "title": "Search users by name in the admin console",
+  "description": "Adds UserDao.searchByName for the admin search box.",
+  "expected": [
+    {
+      "file": "src/main/java/com/acme/users/UserDao.java",
+      "line": 32,
+      "alsoLines": [35],
+      "tolerance": 3,
+      "category": "security",
+      "note": "Request input concatenated into SQL allows injection"
+    }
+  ]
+}

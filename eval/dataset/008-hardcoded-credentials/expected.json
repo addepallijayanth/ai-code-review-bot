@@ -1,0 +1,13 @@
+{
+  "title": "Connect the billing service to its own database",
+  "description": "Billing gets a dedicated connection pool for the billing database.",
+  "expected": [
+    {
+      "file": "src/main/java/com/acme/billing/BillingDataSourceConfig.java",
+      "line": 14,
+      "tolerance": 3,
+      "category": "security",
+      "note": "Production database password committed in source"
+    }
+  ]
+}

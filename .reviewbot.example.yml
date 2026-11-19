@@ -1,0 +1,31 @@
+# Copy to the root of a repository as .reviewbot.yml.
+# It is read from the pull request's base branch, so a pull request cannot change its own review.
+# Every key is optional; anything invalid falls back to the default and is reported in the review summary.
+
+# Lowest severity that gets reported: critical | major | minor | suggestion   (default: minor)
+min_severity: minor
+
+# Paths the bot never reviews, gitignore-style globs.
+# Lockfiles, binaries, generated and vendored code are skipped anyway.
+ignore:
+  - "**/generated/**"
+  - "**/*.lock"
+
+# Categories to concentrate on. Minor findings and suggestions outside these are dropped;
+# critical and major findings are always reported.
+# security | bug | null-safety | concurrency | resource-leak | error-handling | performance | tests | maintainability
+focus:
+  - security
+  - null-safety
+  - tests
+
+# Team rules the reviewer applies to files of each language.
+language_rules:
+  java:
+    - "Prefer Optional over returning null"
+    - "Close resources with try-with-resources"
+  python:
+    - "Use parameterised queries, never f-strings, for SQL"
+
+# Maximum inline comments per review (0-50, default 15); the rest are listed in the summary.
+max_comments: 15

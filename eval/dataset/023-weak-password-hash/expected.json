@@ -1,0 +1,13 @@
+{
+  "title": "Store hashed passwords for local accounts",
+  "description": "Local (non-SSO) accounts can now sign up with a password.",
+  "expected": [
+    {
+      "file": "src/main/java/com/acme/accounts/PasswordHasher.java",
+      "line": 12,
+      "tolerance": 3,
+      "category": "security",
+      "note": "Unsalted MD5 is not a password hash; use bcrypt, scrypt or Argon2"
+    }
+  ]
+}

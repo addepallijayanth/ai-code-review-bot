@@ -1,0 +1,26 @@
+diff --git a/src/main/java/com/acme/payments/RefundService.java b/src/main/java/com/acme/payments/RefundService.java
+index d5fc98d..dc01ffa 100644
+--- a/src/main/java/com/acme/payments/RefundService.java
++++ b/src/main/java/com/acme/payments/RefundService.java
+@@ -16,8 +16,19 @@ public class RefundService {
+     }
+ 
+     public RefundResult refundInFull(Payment payment) {
+-        gateway.refund(payment.getGatewayId(), payment.getAmountCents());
+-        payment.markRefunded(payment.getAmountCents());
++        return refund(payment, payment.getAmountCents());
++    }
++
++    public RefundResult refund(Payment payment, long amountCents) {
++        if (amountCents <= 0 || amountCents > payment.getRefundableCents()) {
++            return RefundResult.rejected(payment.getId(), "amount out of range");
++        }
++        try {
++            gateway.refund(payment.getGatewayId(), amountCents);
++        } catch (GatewayException e) {
++            log.debug("refund failed", e);
++        }
++        payment.markRefunded(amountCents);
+         payments.save(payment);
+         return RefundResult.success(payment.getId());
+     }

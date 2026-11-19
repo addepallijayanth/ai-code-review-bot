@@ -1,0 +1,13 @@
+{
+  "title": "Show campaign conversion rate",
+  "description": "Adds the conversion rate (purchases / visits, in percent) to the campaign dashboard.",
+  "expected": [
+    {
+      "file": "src/main/java/com/acme/marketing/CampaignMetrics.java",
+      "line": 17,
+      "tolerance": 3,
+      "category": "bug",
+      "note": "Integer division truncates to 0 for any campaign with fewer purchases than visits"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+diff --git a/src/main/java/com/acme/ledger/TransferService.java b/src/main/java/com/acme/ledger/TransferService.java
+index cc3acdb..061d2c6 100644
+--- a/src/main/java/com/acme/ledger/TransferService.java
++++ b/src/main/java/com/acme/ledger/TransferService.java
+@@ -3,10 +3,17 @@ package com.acme.ledger;
+ public class TransferService {
+ 
+     public void transfer(Account from, Account to, long amountCents) {
+-        if (from.getBalanceCents() < amountCents) {
+-            throw new InsufficientFundsException(from.getId());
++        if (amountCents <= 0) {
++            throw new IllegalArgumentException("amount must be positive");
++        }
++        synchronized (from) {
++            synchronized (to) {
++                if (from.getBalanceCents() < amountCents) {
++                    throw new InsufficientFundsException(from.getId());
++                }
++                from.debit(amountCents);
++                to.credit(amountCents);
++            }
+         }
+-        from.debit(amountCents);
+-        to.credit(amountCents);
+     }
+ }

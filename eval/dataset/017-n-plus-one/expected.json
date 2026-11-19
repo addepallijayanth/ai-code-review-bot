@@ -1,0 +1,14 @@
+{
+  "title": "Daily order summary endpoint",
+  "description": "Adds /reports/orders/today for the operations team.",
+  "expected": [
+    {
+      "file": "app/reports/views.py",
+      "line": 14,
+      "alsoLines": [11],
+      "tolerance": 3,
+      "category": "performance",
+      "note": "One query per order for the customer and another for the item count (N+1); use select_related and annotate"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "title": "Link previews in chat",
+  "description": "Adds GET /preview?url=... which fetches a page and returns its title for link previews.",
+  "expected": [
+    {
+      "file": "server/routes/preview.js",
+      "line": 16,
+      "tolerance": 3,
+      "category": "security",
+      "note": "Server fetches any user-supplied URL (SSRF): internal services and cloud metadata endpoints are reachable"
+    }
+  ]
+}

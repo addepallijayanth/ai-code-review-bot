@@ -1,0 +1,14 @@
+{
+  "title": "Lock accounts after repeated failed logins",
+  "description": "Tracks failed login attempts per user and locks the account after five failures.",
+  "expected": [
+    {
+      "file": "src/main/java/com/acme/auth/LoginAttemptTracker.java",
+      "line": 16,
+      "alsoLines": [13],
+      "tolerance": 3,
+      "category": "concurrency",
+      "note": "Shared HashMap in a singleton is updated from concurrent requests; lost updates and corruption"
+    }
+  ]
+}

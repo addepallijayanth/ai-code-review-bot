@@ -1,0 +1,13 @@
+{
+  "title": "Import allow-list from a text file",
+  "description": "The import job now reads the allow-list from a file instead of the database.",
+  "expected": [
+    {
+      "file": "src/main/java/com/acme/imports/AllowListReader.java",
+      "line": 15,
+      "tolerance": 3,
+      "category": "resource-leak",
+      "note": "Reader is never closed, leaking a file handle on every import"
+    }
+  ]
+}

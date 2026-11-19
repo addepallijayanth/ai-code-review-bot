@@ -1,0 +1,14 @@
+{
+  "title": "Cache generated thumbnails",
+  "description": "Thumbnails are expensive to render, so ThumbnailService keeps them in memory.",
+  "expected": [
+    {
+      "file": "src/main/java/com/acme/media/ThumbnailService.java",
+      "line": 8,
+      "alsoLines": [18],
+      "tolerance": 3,
+      "category": "performance",
+      "note": "Cache never evicts and is keyed by a client-chosen width, so memory grows without bound"
+    }
+  ]
+}

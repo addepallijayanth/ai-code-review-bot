@@ -1,0 +1,5 @@
+{
+  "title": "URL slugs for blog posts",
+  "description": "Adds slugify() for post URLs, with tests.",
+  "expected": []
+}

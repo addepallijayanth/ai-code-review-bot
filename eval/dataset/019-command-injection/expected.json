@@ -1,0 +1,20 @@
+{
+  "title": "Generate thumbnails for uploaded images",
+  "description": "Uploads are saved to disk and ImageMagick creates a 256px thumbnail.",
+  "expected": [
+    {
+      "file": "app/media/uploads.py",
+      "line": 18,
+      "tolerance": 3,
+      "category": "security",
+      "note": "Client-supplied file name interpolated into a shell command (command injection)"
+    },
+    {
+      "file": "app/media/uploads.py",
+      "line": 15,
+      "tolerance": 3,
+      "category": "security",
+      "note": "Client-supplied file name used as a path allows writing outside the upload directory"
+    }
+  ]
+}

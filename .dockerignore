@@ -1,0 +1,14 @@
+**/target/
+.git/
+.github/
+.idea/
+.vscode/
+docs/
+eval/dataset/
+eval/src/
+eval/results/
+mcp-server/src/
+reviewer-app/src/test/
+*.md
+.env
+*.pem

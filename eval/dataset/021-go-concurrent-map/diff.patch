@@ -1,0 +1,47 @@
+diff --git a/internal/crawler/fetch.go b/internal/crawler/fetch.go
+index 51333d8..0f31d4d 100644
+--- a/internal/crawler/fetch.go
++++ b/internal/crawler/fetch.go
+@@ -3,6 +3,7 @@ package crawler
+ import (
+ 	"io"
+ 	"net/http"
++	"sync"
+ 	"time"
+ )
+ 
+@@ -11,17 +12,23 @@ var client = &http.Client{Timeout: 10 * time.Second}
+ // FetchAll returns the body size of every URL that could be fetched.
+ func FetchAll(urls []string) map[string]int {
+ 	sizes := make(map[string]int)
+-	for _, url := range urls {
+-		resp, err := client.Get(url)
+-		if err != nil {
+-			continue
+-		}
+-		body, err := io.ReadAll(resp.Body)
+-		resp.Body.Close()
+-		if err != nil {
+-			continue
+-		}
+-		sizes[url] = len(body)
++	var wg sync.WaitGroup
++	for _, u := range urls {
++		wg.Add(1)
++		go func(url string) {
++			defer wg.Done()
++			resp, err := client.Get(url)
++			if err != nil {
++				return
++			}
++			defer resp.Body.Close()
++			body, err := io.ReadAll(resp.Body)
++			if err != nil {
++				return
++			}
++			sizes[url] = len(body)
++		}(u)
+ 	}
++	wg.Wait()
+ 	return sizes
+ }

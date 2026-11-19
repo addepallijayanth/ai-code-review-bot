@@ -1,0 +1,13 @@
+{
+  "title": "Paginate the product listing",
+  "description": "Adds a paginate() helper used by the /products endpoint (1-based pages).",
+  "expected": [
+    {
+      "file": "app/catalog/pagination.py",
+      "line": 26,
+      "tolerance": 3,
+      "category": "bug",
+      "note": "Each page returns one extra item, so the last item of a page repeats as the first of the next"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+# stdio transport: stdout carries the MCP protocol, so nothing else may be printed there.
+spring:
+  application:
+    name: reviewbot-mcp-server
+  main:
+    web-application-type: none
+    banner-mode: off
+  ai:
+    mcp:
+      server:
+        name: reviewbot-github
+        version: 1.0.0
+        type: SYNC
+        stdio: true
+        instructions: >-
+          GitHub tools from the AI Code Review Bot: read_file, search_code and list_prs.
+          Repositories are given as owner/name.
+
+logging:
+  pattern:
+    console: ""
+  file:
+    name: ${java.io.tmpdir}/reviewbot-mcp-server.log
+
+reviewbot:
+  mcp:
+    github:
+      token: ${GITHUB_TOKEN:}
+      api-url: ${GITHUB_API_URL:https://api.github.com}

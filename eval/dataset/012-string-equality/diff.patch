@@ -1,0 +1,14 @@
+diff --git a/src/main/java/com/acme/cms/PublishingPolicy.java b/src/main/java/com/acme/cms/PublishingPolicy.java
+index 3f338d4..ce51475 100644
+--- a/src/main/java/com/acme/cms/PublishingPolicy.java
++++ b/src/main/java/com/acme/cms/PublishingPolicy.java
+@@ -3,6 +3,9 @@ package com.acme.cms;
+ public class PublishingPolicy {
+ 
+     public boolean canPublish(User user, Article article) {
++        if ("EDITOR" == user.getRole()) {
++            return true;
++        }
+         return article.getAuthorId().equals(user.getId());
+     }
+ }

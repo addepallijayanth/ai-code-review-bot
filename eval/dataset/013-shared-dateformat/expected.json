@@ -1,0 +1,14 @@
+{
+  "title": "Return invoice due dates as yyyy-MM-dd",
+  "description": "The invoice API now formats the due date so the mobile app can show it as is.",
+  "expected": [
+    {
+      "file": "src/main/java/com/acme/invoices/InvoiceController.java",
+      "line": 11,
+      "alsoLines": [22],
+      "tolerance": 3,
+      "category": "concurrency",
+      "note": "SimpleDateFormat is not thread-safe but is shared by all request threads"
+    }
+  ]
+}

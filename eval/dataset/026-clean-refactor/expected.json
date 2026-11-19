@@ -1,0 +1,5 @@
+{
+  "title": "Extract address validation from OrderValidator",
+  "description": "Pure refactor: the address checks move into their own method so the gift-card flow can reuse them. No behaviour change.",
+  "expected": []
+}

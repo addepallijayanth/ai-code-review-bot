@@ -1,0 +1,23 @@
+diff --git a/src/main/java/com/acme/shipping/LabelService.java b/src/main/java/com/acme/shipping/LabelService.java
+index fc61d28..e402c83 100644
+--- a/src/main/java/com/acme/shipping/LabelService.java
++++ b/src/main/java/com/acme/shipping/LabelService.java
+@@ -1,5 +1,6 @@
+ package com.acme.shipping;
+ 
++import com.acme.customers.Customer;
+ import com.acme.customers.CustomerRepository;
+ import com.acme.orders.Order;
+ import com.acme.orders.OrderNotFoundException;
+@@ -20,4 +21,11 @@ public class LabelService {
+                 .map(Order::getTrackingNumber)
+                 .orElseThrow(() -> new OrderNotFoundException(orderId));
+     }
++
++    public ShippingLabel label(long orderId) {
++        Order order = orders.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
++        Customer customer = customers.findById(order.getCustomerId()).orElse(null);
++        String recipient = customer.getFullName();
++        return new ShippingLabel(recipient, customer.getAddress().format(), order.getTrackingNumber());
++    }
+ }

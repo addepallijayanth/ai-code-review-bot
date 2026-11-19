@@ -1,0 +1,14 @@
+{
+  "title": "Make transfers between accounts atomic",
+  "description": "Transfers now lock both accounts so concurrent transfers cannot overdraw them.",
+  "expected": [
+    {
+      "file": "src/main/java/com/acme/ledger/TransferService.java",
+      "line": 9,
+      "alsoLines": [10],
+      "tolerance": 3,
+      "category": "concurrency",
+      "note": "Locks are taken in argument order, so two opposite transfers between the same accounts can deadlock"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "title": "Forward order events to the partner webhook",
+  "description": "The worker forwards each order event to the partner's webhook URL.",
+  "expected": [
+    {
+      "file": "app/integrations/forwarder.py",
+      "line": 12,
+      "tolerance": 3,
+      "category": "error-handling",
+      "note": "No timeout: a slow or hung partner endpoint blocks the worker indefinitely"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+diff --git a/src/main/java/com/acme/invoices/InvoiceController.java b/src/main/java/com/acme/invoices/InvoiceController.java
+index d6076a0..3242772 100644
+--- a/src/main/java/com/acme/invoices/InvoiceController.java
++++ b/src/main/java/com/acme/invoices/InvoiceController.java
+@@ -1,5 +1,6 @@
+ package com.acme.invoices;
+ 
++import java.text.SimpleDateFormat;
+ import org.springframework.web.bind.annotation.GetMapping;
+ import org.springframework.web.bind.annotation.PathVariable;
+ import org.springframework.web.bind.annotation.RestController;
+@@ -7,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
+ @RestController
+ public class InvoiceController {
+ 
++    private static final SimpleDateFormat DUE_DATE = new SimpleDateFormat("yyyy-MM-dd");
++
+     private final InvoiceRepository invoices;
+ 
+     public InvoiceController(InvoiceRepository invoices) {
+@@ -14,7 +17,8 @@ public class InvoiceController {
+     }
+ 
+     @GetMapping("/api/invoices/{id}")
+-    public Invoice get(@PathVariable long id) {
+-        return invoices.require(id);
++    public InvoiceView get(@PathVariable long id) {
++        Invoice invoice = invoices.require(id);
++        return new InvoiceView(invoice.getNumber(), DUE_DATE.format(invoice.getDueDate()), invoice.getTotal());
+     }
+ }

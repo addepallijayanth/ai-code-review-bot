@@ -1,0 +1,13 @@
+{
+  "title": "Fetch page sizes concurrently",
+  "description": "FetchAll now downloads all URLs in parallel instead of one by one.",
+  "expected": [
+    {
+      "file": "internal/crawler/fetch.go",
+      "line": 29,
+      "tolerance": 3,
+      "category": "concurrency",
+      "note": "Goroutines write to the same map without synchronisation (fatal concurrent map writes)"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "title": "Support partial refunds",
+  "description": "Refunds can now be for part of the payment amount.",
+  "expected": [
+    {
+      "file": "src/main/java/com/acme/payments/RefundService.java",
+      "line": 28,
+      "alsoLines": [29],
+      "tolerance": 3,
+      "category": "error-handling",
+      "note": "Gateway failure is swallowed; the payment is marked refunded and success is returned anyway"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "title": "Let editors publish any article",
+  "description": "Editors can now publish articles written by other authors.",
+  "expected": [
+    {
+      "file": "src/main/java/com/acme/cms/PublishingPolicy.java",
+      "line": 6,
+      "tolerance": 3,
+      "category": "bug",
+      "note": "Strings compared with == instead of equals(), so editors are not recognised"
+    }
+  ]
+}

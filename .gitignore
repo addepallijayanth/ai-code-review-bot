@@ -1,0 +1,18 @@
+# Build output
+target/
+
+# IDEs and OS files
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Secrets: configure through the environment, never commit them
+.env
+*.pem
+
+# Local evaluation output (the Eval workflow uploads it as an artifact)
+eval/results/
+
+*.log

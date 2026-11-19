@@ -1,0 +1,13 @@
+{
+  "title": "Allow deleting projects",
+  "description": "Adds DELETE /api/projects/{id}.",
+  "expected": [
+    {
+      "file": "src/main/java/com/acme/projects/ProjectController.java",
+      "line": 39,
+      "tolerance": 3,
+      "category": "security",
+      "note": "Any signed-in user can delete any project: the ownership check used by the other endpoints is missing"
+    }
+  ]
+}

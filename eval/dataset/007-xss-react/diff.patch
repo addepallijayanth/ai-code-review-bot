@@ -1,0 +1,13 @@
+diff --git a/web/src/components/CommentList.tsx b/web/src/components/CommentList.tsx
+index 5533e7f..995180b 100644
+--- a/web/src/components/CommentList.tsx
++++ b/web/src/components/CommentList.tsx
+@@ -14,7 +14,7 @@ export function CommentList({ comments }: Props) {
+       {comments.map((comment) => (
+         <li key={comment.id}>
+           <strong>{comment.author}</strong>
+-          <p className="body">{comment.body}</p>
++          <div className="body" dangerouslySetInnerHTML={{ __html: comment.body }} />
+         </li>
+       ))}
+     </ul>

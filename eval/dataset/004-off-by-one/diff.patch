@@ -1,0 +1,56 @@
+diff --git a/app/catalog/pagination.py b/app/catalog/pagination.py
+new file mode 100644
+index 0000000..98b60c2
+--- /dev/null
++++ b/app/catalog/pagination.py
+@@ -0,0 +1,27 @@
++from dataclasses import dataclass
++from typing import Generic, Sequence, TypeVar
++
++T = TypeVar("T")
++
++
++@dataclass(frozen=True)
++class Page(Generic[T]):
++    items: Sequence[T]
++    page: int
++    page_size: int
++    total: int
++
++    @property
++    def has_next(self) -> bool:
++        return self.page * self.page_size < self.total
++
++
++def paginate(items: Sequence[T], page: int, page_size: int = 20) -> Page[T]:
++    """Return the items on a 1-based page."""
++    if page < 1:
++        raise ValueError("page must be >= 1")
++    if page_size < 1:
++        raise ValueError("page_size must be >= 1")
++    start = (page - 1) * page_size
++    end = start + page_size + 1
++    return Page(items=items[start:end], page=page, page_size=page_size, total=len(items))
+diff --git a/app/catalog/views.py b/app/catalog/views.py
+index 2c79dea..47ed80e 100644
+--- a/app/catalog/views.py
++++ b/app/catalog/views.py
+@@ -1,5 +1,6 @@
+-from flask import Blueprint, jsonify
++from flask import Blueprint, jsonify, request
+ 
++from app.catalog.pagination import paginate
+ from app.catalog.repository import all_products
+ 
+ bp = Blueprint("catalog", __name__)
+@@ -7,4 +8,9 @@ bp = Blueprint("catalog", __name__)
+ 
+ @bp.get("/products")
+ def list_products():
+-    return jsonify([p.to_dict() for p in all_products()])
++    page = paginate(all_products(), int(request.args.get("page", 1)))
++    return jsonify({
++        "items": [p.to_dict() for p in page.items],
++        "page": page.page,
++        "has_next": page.has_next,
++    })

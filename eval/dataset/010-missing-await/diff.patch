@@ -1,0 +1,21 @@
+diff --git a/server/src/services/importService.ts b/server/src/services/importService.ts
+new file mode 100644
+index 0000000..4adb38f
+--- /dev/null
++++ b/server/src/services/importService.ts
+@@ -0,0 +1,15 @@
++import { ContactRepository } from "../repositories/contactRepository";
++import { ContactRow, toContact } from "../model/contact";
++
++/**
++ * Saves every row and returns the number of contacts imported.
++ */
++export async function importContacts(rows: ContactRow[], repo: ContactRepository): Promise<number> {
++  let imported = 0;
++  rows.forEach(async (row) => {
++    const contact = toContact(row);
++    await repo.save(contact);
++    imported++;
++  });
++  return imported;
++}

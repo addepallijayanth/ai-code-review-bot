@@ -1,0 +1,228 @@
+/* Tokens follow a light and a dark theme; components reference roles, never raw colors. */
+.viz-root {
+    color-scheme: light;
+    --page: #f9f9f7;
+    --surface-1: #fcfcfb;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #898781;
+    --hairline: #e1e0d9;
+    --border: rgba(11, 11, 11, 0.10);
+    --link: #256abf;
+    --status-good: #0ca30c;
+    --status-critical: #d03b3b;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+        color-scheme: dark;
+        --page: #0d0d0d;
+        --surface-1: #1a1a19;
+        --text-primary: #f0efec;
+        --text-secondary: #c3c2b7;
+        --text-muted: #898781;
+        --hairline: #2c2c2a;
+        --border: rgba(255, 255, 255, 0.10);
+        --link: #86b6ef;
+    }
+}
+
+:root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface-1: #1a1a19;
+    --text-primary: #f0efec;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --hairline: #2c2c2a;
+    --border: rgba(255, 255, 255, 0.10);
+    --link: #86b6ef;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+.viz-root {
+    min-height: 100vh;
+    padding: 32px 24px 48px;
+    background: var(--page);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.subtitle {
+    margin: 4px 0 24px;
+    color: var(--text-secondary);
+}
+
+.kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.tile,
+.card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.tile {
+    padding: 16px;
+}
+
+.tile-label {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.tile-value {
+    margin: 4px 0 2px;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.tile-note {
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.card {
+    padding: 16px 20px;
+    margin-bottom: 16px;
+}
+
+.card-title {
+    margin: 0 0 12px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.severity-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 8px 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.severity-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--hairline);
+}
+
+.severity-label {
+    color: var(--text-secondary);
+}
+
+.severity-count {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+}
+
+th,
+td {
+    padding: 8px 10px;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--hairline);
+}
+
+th {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+td.num,
+th.num {
+    text-align: right;
+}
+
+a {
+    color: var(--link);
+    text-decoration: none;
+}
+
+a:hover,
+a:focus-visible {
+    text-decoration: underline;
+}
+
+code {
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.status {
+    color: var(--text-secondary);
+}
+
+.status::before {
+    display: inline-block;
+    width: 1.2em;
+    color: var(--text-muted);
+    content: "•";
+}
+
+.status-completed::before {
+    color: var(--status-good);
+    content: "✓";
+}
+
+.status-failed::before {
+    color: var(--status-critical);
+    content: "✕";
+}
+
+.status-skipped::before {
+    content: "–";
+}
+
+.status-running::before {
+    content: "…";
+}
+
+.empty {
+    margin: 0;
+    color: var(--text-muted);
+}
